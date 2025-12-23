@@ -1,0 +1,87 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* --- SISTEMA DE DESIGN (Design System) --- */
+:root {
+  /* Cores Base: Fundo escuro profundo para reduzir o cansaço visual */
+  --bg-color: #0f1014;
+  --text-main: #ffffff;
+  --text-muted: #a0a0a0;
+  
+  /* Configuração do Efeito de Vidro (Glassmorphism) */
+  /* Ajustamos a opacidade para garantir legibilidade sobre o fundo */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.6);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  
+  /* Efeitos Especiais */
+  --spotlight-color: rgba(255, 255, 255, 0.08); /* A luz que segue o mouse */
+  
+  /* Identidade Visual */
+  --btn-gradient: linear-gradient(135deg, #8e44ad, #3498db); /* Gradiente Roxo/Azul da marca */
+  --font-family: 'Outfit', sans-serif;
+}
+
+body {
+  background-color: var(--bg-color);
+  /* Gradiente radial sutil para criar profundidade (não parecer chapado) */
+  background-image: radial-gradient(circle at 50% 0%, #1a1c29 0%, #000 100%);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  height: 100vh;
+  margin: 0;
+  overflow-x: hidden; /* Evita rolagem lateral indesejada em telas pequenas */
+}
+
+/* --- COMPONENTES VISUAIS --- */
+
+/* Cartão com efeito de vidro fosco */
+.login-card {
+  background: var(--glass-bg);
+  
+  /* O "backdrop-filter" é o segredo do efeito blur (desfoque) atrás do elemento */
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px); /* Compatibilidade com Safari */
+  
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 40px 80px -20px var(--glass-shadow);
+  transform-style: preserve-3d;
+}
+
+/* Efeito Spotlight (Luz Interativa) */
+/* Cria uma camada invisível sobre o card que brilha onde o mouse passa */
+.login-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  border-radius: 24px;
+  
+  /* As variáveis --mouse-x e --mouse-y são injetadas pelo JavaScript */
+  background: radial-gradient(
+      800px circle at var(--mouse-x) var(--mouse-y), 
+      var(--spotlight-color), 
+      transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 1; /* Garante que o brilho fique acima do fundo, mas abaixo do texto */
+  pointer-events: none; /* Deixa o clique passar "através" da luz */
+}
+
+/* Revela o efeito de luz apenas quando o mouse passa por cima */
+.login-card:hover::before {
+  opacity: 1;
+}
+
+/* Orbs (Esferas de Luz Ambientais) */
+/* Elementos decorativos desfocados no fundo para dar "clima" */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.5;
+  z-index: -1; /* Fica sempre atrás de tudo */
+  pointer-events: none;
+}
