@@ -106,33 +106,62 @@ export default function ProdutoForm() {
   // Mostra "por baixo do capô" quanto se paga de imposto em cada etapa.
   const DetalhamentoCusto = ({ res, cenario }) => (
     <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t border-white/10">
-        <div className="text-center p-2 rounded bg-white/5">
+        
+        {/* --- LINHA 1: ENTRADA E CUSTOS INICIAIS --- */}
+        
+        {/* 1. ICMS Entrada (Crédito) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
             <div className="text-[10px] text-gray-400">ICMS Ent (Créd)</div>
             <div className="text-xs font-bold text-green-400">{fmt(resultados.custoBase?.valorICMSEnt)}</div>
         </div>
-        
-        <div className="text-center p-2 rounded bg-white/5">
+
+        {/* 2. ST (Custo ou Isento) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
             <div className="text-[10px] text-gray-400">ST {form.flag_simulacao_st ? '(Isento)' : ''}</div>
-            {/* Visualmente risca o valor se estivermos simulando isenção */}
             <div className={`text-xs font-bold ${form.flag_simulacao_st ? 'text-gray-500 line-through' : 'text-red-400'}`}>
                 {fmt(resultados.custoBase?.valorST)}
             </div>
         </div>
-        
-        <div className="text-center p-2 rounded bg-white/5">
+
+        {/* 3. IPI (Custo) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
+            <div className="text-[10px] text-gray-400">IPI</div>
+            <div className="text-xs font-bold text-red-400">{fmt(resultados.custoBase?.valorIPI)}</div>
+        </div>
+
+        {/* 4. PIS/COFINS Entrada (Crédito) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
             <div className="text-[10px] text-gray-400">PIS/COF (Créd)</div>
             <div className="text-xs font-bold text-green-400">{fmt(resultados.custoBase?.creditoPisCofins)}</div>
         </div>
-        
-        <div className="text-center p-2 rounded bg-white/5">
-            <div className="text-[10px] text-gray-400">Taxas Venda</div>
-            <div className="text-xs font-bold text-red-400">{fmt(res?.valorICMSSai + res?.debitoPisCofins)}</div>
+
+
+        {/* --- LINHA 2: SAÍDA E COMISSÃO --- */}
+
+        {/* 5. ICMS Saída (Débito) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
+            <div className="text-[10px] text-gray-400">ICMS Saída</div>
+            <div className="text-xs font-bold text-red-400">{fmt(res?.valorICMSSai)}</div>
         </div>
-        
-        <div className="text-center p-2 rounded bg-white/5 col-span-4 bg-yellow-500/10 border border-yellow-500/20">
-            <div className="text-[10px] text-yellow-500">Comissão ML ({cenario === 'classico' ? '11.5%' : '16.5%'})</div>
+
+        {/* 6. PIS/COFINS Saída (Débito) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
+            <div className="text-[10px] text-gray-400">PIS/COF (Déb)</div>
+            <div className="text-xs font-bold text-red-400">{fmt(res?.debitoPisCofins)}</div>
+        </div>
+
+        {/* 7. DIFAL (Débito) */}
+        <div className="text-center p-2 rounded bg-white/5 flex flex-col justify-center h-16">
+            <div className="text-[10px] text-gray-400">DIFAL</div>
+            <div className="text-xs font-bold text-red-400">{fmt(res?.valorDifal)}</div>
+        </div>
+
+        {/* 8. Comissão ML (Custo) */}
+        <div className="text-center p-2 rounded bg-yellow-500/10 border border-yellow-500/20 flex flex-col justify-center h-16">
+            <div className="text-[10px] text-yellow-500">Taxa ML ({cenario === 'classico' ? '11.5%' : '16.5%'})</div>
             <div className="text-xs font-bold text-yellow-400">{fmt(res?.taxaML)}</div>
         </div>
+
     </div>
   );
 
